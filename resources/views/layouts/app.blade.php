@@ -35,7 +35,17 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Left Side Of Navbar -->
           <ul class="navbar-nav mr-auto">
-
+            @auth
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ route('profile', ['id' => Auth::id()]) }}">My Profile</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ route('entries.index') }}">{{ __('My Entries List') }}</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ route('entries.create') }}">{{ __('Create New Entry') }}</a>
+            </li>
+            @endauth
           </ul>
 
           <!-- Right Side Of Navbar -->

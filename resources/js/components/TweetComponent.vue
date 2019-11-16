@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-lg bg-light border mb-1">
+  <div v-if="canHide || !hided" class="rounded-lg bg-light border mb-1">
     <div class="d-flex justify-content-between p-1">
       <small>{{ tweetData.created_at | formatDate }}</small>
       <button v-if="canHide" class="btn" v-bind:class="[ hided ? 'btn-primary' : 'btn-warning']" v-on:click="onClickHide()">{{ hided ? 'Show' : 'Hide' }}</button>

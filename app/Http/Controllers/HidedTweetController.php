@@ -18,13 +18,13 @@ class HidedTweetController extends Controller
   {
     try
     {
-      $hidedTweets = HidedTweet::where("id_user", $id)
+      $hidedTweets = HidedTweet::where("users_id", $id)
         ->orderBy("id");
       return APIResponseResult::OK($hidedTweets);
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
 
@@ -42,7 +42,7 @@ class HidedTweetController extends Controller
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
   /**
@@ -55,14 +55,14 @@ class HidedTweetController extends Controller
     try
     {
       $hidedTweet = new HidedTweet;
-      $hidedTweet->id_user = $request->id_user;
-      $hidedTweet->id_tweet = $request->id_tweet;
+      $hidedTweet->users_id = $request->users_id;
+      $hidedTweet->tweet_id = $request->tweet_id;
       $hidedTweet->save();
       return APIResponseResult::OK($hidedTweet); 
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
   /**
@@ -84,7 +84,7 @@ class HidedTweetController extends Controller
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
 }

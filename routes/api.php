@@ -31,3 +31,5 @@ Route::get('/hidedtweet/{id}', 'HidedTweetController@get');
 Route::get('/hidedtweet', 'HidedTweetController@list');
 Route::post('/hidedtweet', 'HidedTweetController@insert');
 Route::delete('/hidedtweet/{id}', 'HidedTweetController@delete');
+// Routes for Users
+Route::get('/users/{id}', 'UserController@get');

@@ -24,6 +24,7 @@ window.Vue = require('vue');
 Vue.component('list-tweet-component', require('./components/ListTweetComponent.vue').default);
 Vue.component('tweet-component', require('./components/TweetComponent.vue').default);
 Vue.component('general-entries-component', require('./components/GeneralEntriesComponent.vue').default);
+Vue.component('user-entries-component', require('./components/UserEntriesComponent.vue').default);
 
 Vue.filter('formatDate', function(value) {
   if (value) {

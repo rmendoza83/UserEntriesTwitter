@@ -6,6 +6,7 @@ use App\Entry;
 use App\User;
 use Classes\APIResponseResult;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon as Carbon;
 
@@ -18,62 +19,31 @@ class EntryController extends Controller
    */
   public function all()
   {
-    try
-    {
+    try {
       $userentries = User::with('entries')
         ->get();
       $filteredUserEntries = [];
-      foreach ($userentries as $user)
-      {
-        $temporalEntries = array_slice($user->entries->toArray(),0, 3);
-        for ($i = 0; $i < count($temporalEntries); $i++)
-        {
+      foreach ($userentries as $user) {
+        $temporalEntries = array_slice($user->entries->toArray(), 0, 3);
+        for ($i = 0; $i < count($temporalEntries); $i++) {
           $temporalEntries[$i]["name"] = $user->name;
           $temporalEntries[$i]["twiter_username"] = $user->twitter_username;
         }
-        $filteredUserEntries = array_merge($filteredUserEntries,$temporalEntries);
+        $filteredUserEntries = array_merge($filteredUserEntries, $temporalEntries);
       }
-      usort($filteredUserEntries, function($a, $b) {
-        $datea = Carbon::parse($a["creation_date"]);
-        $dateb = Carbon::parse($b["creation_date"]);
-        if ($datea->greaterThan($dateb))
-        {
+      usort($filteredUserEntries, function ($a, $b) {
+        $datea = Carbon::parse($a["created_at"]);
+        $dateb = Carbon::parse($b["created_at"]);
+        if ($datea->greaterThan($dateb)) {
           return -1;
-        } 
-        else if ($datea->lessThan($dateb))
-        {
+        } else if ($datea->lessThan($dateb)) {
           return 1;
-        }
-        else
-        {
+        } else {
           return 0;
         }
       });
       return APIResponseResult::OK($filteredUserEntries);
-    }
-    catch (Exception $e)
-    {
-      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
-    }
-  }
-  /**
-   * Get one entry
-   *
-   * @return APIResponseResult
-   */
-  public function get($id)
-  {
-    try
-    {
-      $entry = Entry::find($id);
-      if (!$entry)
-      {
-        return APIResponseResult::ERROR("The Entry $id doesn't exists on the database");
-      }
-      return APIResponseResult::OK($entry);
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
       return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
@@ -86,83 +56,121 @@ class EntryController extends Controller
   {
     try
     {
-      $entries = Entry::where("users_id", $id)
-        ->orderBy("id", "desc");
-      return APIResponseResult::OK($entries);
+      $userentries = Entry::where("users_id", $id)
+        ->orderBy("creation_date", "desc")
+        ->get();
+      return APIResponseResult::OK($userentries);
     }
     catch (Exception $e)
     {
       return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
+
   /**
-   * Inserts a new data for entries
+   * Display a listing of the resource.
    *
-   * @return APIResponseResult
+   * @return \Illuminate\Http\Response
    */
-  public function insert(Request $request)
+  public function index()
   {
-    try
-    {
-      $mytime = Carbon::now();
-      $entry = new Entry;
-      $entry->users_id = $request->users_id;
-      $entry->creation_date = $mytime->toDateTimeString();
-      $entry->title = $request->title;
-      $entry->content = $request->content;
-      $entry->save();
-      return APIResponseResult::OK($entry); 
-    }
-    catch (Exception $e)
-    {
-      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
-    }
+    $entries = Auth::user()->entries()->orderBy('created_at', 'desc')->get();
+    return view('entries.index', compact('entries'));
   }
+
   /**
-   * Updates the entry specified
+   * Show the form for creating a new resource.
    *
-   * @return APIResponseResult
+   * @return \Illuminate\Http\Response
+   */
+  public function create()
+  {
+    return view('entries.create');
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(Request $request)
+  {
+    //Validate
+    $request->validate([
+      'title' => ['required', 'string', 'max:255'],
+      'content' => ['required'],
+    ]);
+    $mytime = Carbon::now();
+    $entry = new Entry;
+    $entry->users_id = Auth::id();
+    $entry->title = $request->title;
+    $entry->content = $request->content;
+    $entry->creation_date = $mytime->toDateTimeString();
+    $entry->save();
+    return redirect('/entries')->with('success', 'Entry was successfully saved');
+  }
+
+  /**
+   * Display the specified resource.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function show($id)
+  {
+    $entry = Entry::find($id);
+
+    return view('entries.show', compact('entry'));
+  }
+
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function edit($id)
+  {
+    $entry = Entry::find($id);
+
+    return view('entries.edit', compact('entry'));
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
    */
   public function update(Request $request, $id)
   {
-    try
-    {
-      $entry = Entry::find($id);
-      if (!$entry)
-      {
-        return APIResponseResult::ERROR("The Entry $id doesn't exists on the database");
-      }
-      $entry->users_id = $request->users_id;
-      $entry->title = $request->title;
-      $entry->content = $request->content;
-      $entry->save();
-      return APIResponseResult::OK($entry); 
-    }
-    catch (Exception $e)
-    {
-      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
-    }
+    //Validate
+    $validatedData = $request->validate([
+      'title' => ['required', 'string', 'max:255'],
+      'content' => ['required'],
+    ]);
+
+    $entry = Entry::find($id);
+    $entry->title = $request->title;
+    $entry->content = $request->content;
+    $entry->save();
+
+    return redirect('/entries')->with('success', 'Entry was successfully updated');
   }
+
   /**
-   * Delete the entry specified
+   * Remove the specified resource from storage.
    *
-   * @return APIResponseResult
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
    */
-  public function delete($id)
+  public function destroy($id)
   {
-    try
-    {
-      $entry = Entry::find($id);
-      if (!$entry)
-      {
-        return APIResponseResult::ERROR("The Entry $id doesn't exists on the database");
-      }
-      $entry->delete();
-      return APIResponseResult::OK();
-    }
-    catch (Exception $e)
-    {
-      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
-    }
+    $entry = Entry::find($id);
+    $entry->delete();
+
+    return redirect('/entries')->with('success', 'Entry was successfully deleted');
   }
 }

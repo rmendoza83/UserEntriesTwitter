@@ -48,7 +48,7 @@ class User extends Authenticatable
   public function entries()
   {
     return $this->hasMany('App\Entry','users_id')
-      ->orderBy('creation_date', 'desc')
-      ->select('id', 'users_id', 'creation_date', 'title', 'content');
+      ->orderBy('created_at', 'desc')
+      ->select('id', 'users_id', 'creation_date', 'title', 'content', 'created_at');
   }
 }

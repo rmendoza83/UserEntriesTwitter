@@ -28,7 +28,7 @@ Vue.component('user-entries-component', require('./components/UserEntriesCompone
 
 Vue.filter('formatDate', function(value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY hh:mm')
+    return moment.utc(String(value)).local().format('MM/DD/YYYY hh:mm')
   }
 });
 

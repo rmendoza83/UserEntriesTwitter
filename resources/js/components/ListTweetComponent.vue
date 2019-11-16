@@ -1,19 +1,23 @@
 <template>
-  <div>
-    <h5>Tweets</h5>
-    <div class="d-flex justify-content-end">
-      <div>
-        <tweet-component
-          v-for="tweet in tweets"
-          :key="tweet.id"
-          :tweetData="tweet"
-          :can-hide="canHide"
-          :users_id="users_id"
-          :hided_id="getHidedTweetId(tweet.id)"
-          :hided="getHidedTweetId(tweet.id) != null"
-          @update="updateHidedTweets()"
-        >
-        </tweet-component>
+  <div class="card">
+    <div class="card-header">
+      <h2>Tweets</h2>
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-end">
+        <div>
+          <tweet-component
+            v-for="tweet in tweets"
+            :key="tweet.id"
+            :tweetData="tweet"
+            :can-hide="canHide"
+            :users_id="users_id"
+            :hided_id="getHidedTweetId(tweet.id)"
+            :hided="getHidedTweetId(tweet.id) != null"
+            @update="updateHidedTweets()"
+          >
+          </tweet-component>
+        </div>
       </div>
     </div>
   </div>

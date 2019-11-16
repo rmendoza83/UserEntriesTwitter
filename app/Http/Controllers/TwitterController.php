@@ -38,22 +38,26 @@ class TwitterController extends Controller
       {
         return APIResponseResult::ERROR("The User $id doesn't exists on the database");
       }
-      $url = Constants::TWITTER_USER_TIMELINE_URL;
-      $requestMethod = "GET";
-      $fields = [
-        "screen_name" => $user->twitter_username,
-        "count" => Constants::TWITTER_MAX_COUNT_TWEETS
-      ];
-      $twitter = new TwitterAPIExchange($this->getTwitterSettings());
-      $response = $twitter->setGetfield("?". http_build_query($fields))
-        ->buildOauth($url, $requestMethod)
-        ->performRequest();
-      
-      return APIResponseResult::OK(json_decode($response));
+      if (strlen(trim($user->twitter_username)) > 0)
+      {
+        $url = Constants::TWITTER_USER_TIMELINE_URL;
+        $requestMethod = "GET";
+        $fields = [
+          "screen_name" => $user->twitter_username,
+          "count" => Constants::TWITTER_MAX_COUNT_TWEETS
+        ];
+        $twitter = new TwitterAPIExchange($this->getTwitterSettings());
+        $response = $twitter->setGetfield("?". http_build_query($fields))
+          ->buildOauth($url, $requestMethod)
+          ->performRequest();
+        
+        return APIResponseResult::OK(json_decode($response));
+      }
+      return APIResponseResult::OK([]);
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
 }

@@ -23,6 +23,7 @@ window.Vue = require('vue');
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('list-tweet-component', require('./components/ListTweetComponent.vue').default);
 Vue.component('tweet-component', require('./components/TweetComponent.vue').default);
+Vue.component('general-entries-component', require('./components/GeneralEntriesComponent.vue').default);
 
 Vue.filter('formatDate', function(value) {
   if (value) {
@@ -37,5 +38,5 @@ Vue.filter('formatDate', function(value) {
  */
 
 const app = new Vue({
-    el: '#app',
+    el: '#app'
 });

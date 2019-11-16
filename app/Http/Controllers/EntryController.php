@@ -23,17 +23,24 @@ class EntryController extends Controller
       $userentries = User::with('entries')
         ->get();
       $filteredUserEntries = [];
-      //return APIResponseResult::OK($filteredUserEntries);
       foreach ($userentries as $user)
       {
-        $filteredUserEntries = array_merge($filteredUserEntries,array_slice($user->entries->toArray(),0, 3));
+        $temporalEntries = array_slice($user->entries->toArray(),0, 3);
+        for ($i = 0; $i < count($temporalEntries); $i++)
+        {
+          $temporalEntries[$i]["name"] = $user->name;
+          $temporalEntries[$i]["twiter_username"] = $user->twitter_username;
+        }
+        $filteredUserEntries = array_merge($filteredUserEntries,$temporalEntries);
       }
       usort($filteredUserEntries, function($a, $b) {
-        if (Carbon::parse($a["creation_date"])->greaterThan(Carbon::parse($b["creation_date"])))
+        $datea = Carbon::parse($a["creation_date"]);
+        $dateb = Carbon::parse($b["creation_date"]);
+        if ($datea->greaterThan($dateb))
         {
           return -1;
         } 
-        else if (Carbon::parse($a["creation_date"])->lessThan(Carbon::parse($b["creation_date"])))
+        else if ($datea->lessThan($dateb))
         {
           return 1;
         }

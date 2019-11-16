@@ -43,8 +43,6 @@ export default {
         axios.post('/api/hidedtweet', params)
           .subscribe(response => {
             if (response.data.statusCode == 200) {
-              this.hided = true;
-              this.hided_id = response.data.id;
               this.$emit('update');
             }
           });

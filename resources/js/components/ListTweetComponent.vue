@@ -7,7 +7,7 @@
       <div class="d-flex justify-content-end">
         <div>
           <tweet-component
-            v-for="tweet in tweets"
+            v-for="tweet in visibleTweets"
             :key="tweet.id"
             :tweetData="tweet"
             :can-hide="canHide"
@@ -17,6 +17,13 @@
             @update="updateHidedTweets()"
           >
           </tweet-component>
+          <button
+            class="btn btn-info float-right"
+            v-if="tweets.length != visibleTweets.length"
+            v-on:click="onShowMore()"
+            >
+            Show More
+          </button>
         </div>
       </div>
     </div>
@@ -32,7 +39,9 @@ export default {
   data() {
     return {
       tweets: [],
-      hidedTweets: []
+      visibleTweets: [],
+      hidedTweets: [],
+      visibleCount: 5
     }
   },
   mounted() {
@@ -40,6 +49,7 @@ export default {
       .subscribe(response => {
         if (response.data.statusCode == 200) {
           this.tweets = response.data.data;
+          this.getVisibleTweets();
           axios.get('/api/hidedtweet')
             .subscribe(response => {
               if (response.data.statusCode == 200) {
@@ -66,6 +76,23 @@ export default {
             this.hidedTweets = response.data.data;
           }
         });
+    },
+    getVisibleTweets() {
+      let count = 0;
+      this.visibleTweets = [];
+      for (let tweet of this.tweets) {
+        if (this.canHide || (this.getHidedTweetId(tweet.id) != null)) {
+          this.visibleTweets.push(tweet);
+          count++;
+        }
+        if (count == this.visibleCount) {
+          break;
+        }
+      }
+    },
+    onShowMore() {
+      this.visibleCount += 5;
+      this.getVisibleTweets();
     }
   }
 };

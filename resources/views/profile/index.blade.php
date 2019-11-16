@@ -37,5 +37,4 @@
     @endguest
   </div>
 </div>
-<label>{{ $user_id }}</label>
 @endsection

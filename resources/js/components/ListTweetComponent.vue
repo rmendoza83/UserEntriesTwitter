@@ -19,7 +19,7 @@
           </tweet-component>
           <button
             class="btn btn-info float-right"
-            v-if="tweets.length > visibleTweets.length"
+            v-if="tweets.length > visibleTweets.length && visibleTweets.length > 0"
             v-on:click="onShowMore()"
             >
             Show More
@@ -49,11 +49,11 @@ export default {
       .subscribe(response => {
         if (response.data.statusCode == 200) {
           this.tweets = response.data.data;
-          this.getVisibleTweets();
           axios.get('/api/hidedtweet')
             .subscribe(response => {
               if (response.data.statusCode == 200) {
                 this.hidedTweets = response.data.data;
+                this.getVisibleTweets();
               }
             });
         }
@@ -81,7 +81,7 @@ export default {
       let count = 0;
       this.visibleTweets = [];
       for (let tweet of this.tweets) {
-        if (this.canHide || (this.getHidedTweetId(tweet.id) != null)) {
+        if (this.canHide || (this.getHidedTweetId(tweet.id) == null)) {
           this.visibleTweets.push(tweet);
           count++;
         }

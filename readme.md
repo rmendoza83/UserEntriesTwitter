@@ -26,11 +26,13 @@ Create a web app that will have two parts. The first part involves entries (simi
 from registered users (functionality to view, create, and edit entries). The second part is to be
 able to see a single user's entries and tweets (from Twitter).
 
-[Online Testing server](https://userentries.sophie-ware.com/)
+[Online Testing server](https://userentries.sophie-ware.fun/)
 
 ## Application Info
 **Framework:** Laravel 6 + VueJs
+
 **Operation System:** Debian 9 | Apache 2.4.25 | PHP 7.3.11 | MariaDB (MySQL) 10.1.41
+
 **Dependencies:** Laravel 6 Dependencies, cURL PHP extension, NodeJS
 
 ## General Deployment Instructions

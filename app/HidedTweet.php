@@ -18,7 +18,7 @@ class HidedTweet extends Model
    * @var array
    */
   protected $fillable = [
-    'id_user',
-    'id_tweet'
+    'users_id',
+    'tweet_id'
   ];
 }

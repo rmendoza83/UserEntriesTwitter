@@ -44,4 +44,11 @@ class User extends Authenticatable
   protected $casts = [
     'email_verified_at' => 'datetime',
   ];
+
+  public function entries()
+  {
+    return $this->hasMany('App\Entry','users_id')
+      ->orderBy('creation_date', 'desc')
+      ->select('id', 'users_id', 'creation_date', 'title', 'content');
+  }
 }

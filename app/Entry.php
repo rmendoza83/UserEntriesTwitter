@@ -18,7 +18,7 @@ class Entry extends Model
    * @var array
    */
   protected $fillable = [
-    'id_user',
+    'users_id',
     'creation_date',
     'title',
     'content'
@@ -31,4 +31,9 @@ class Entry extends Model
   protected $dates = [
     'creation_date'
   ];
+
+  public function users() 
+  {
+    return $this->belongsTo('App\User');
+  }
 }

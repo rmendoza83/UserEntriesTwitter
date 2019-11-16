@@ -15,8 +15,8 @@ class HidedTweetsTable extends Migration
   {
     Schema::create('hided_tweets', function (Blueprint $table) {
       $table->bigIncrements('id');
-      $table->bigInteger('id_user');
-      $table->bigInteger('id_tweet');
+      $table->bigInteger('users_id');
+      $table->bigInteger('tweet_id');
       $table->timestamps();
     });
   }

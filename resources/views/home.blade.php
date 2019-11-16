@@ -15,7 +15,11 @@
                     @endif
                 </div>
 
-                <example-component></example-component>
+                <list-tweet-component
+                  :can-hide="true"
+                  :users_id="1"
+                  >
+                </list-tweet-component>
             </div>
         </div>
     </div>

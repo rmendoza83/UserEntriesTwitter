@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\HidedTweet;
 use Classes\APIResponseResult;
 use Exception;
+use Illuminate\Http\Request;
 
 class HidedTweetController extends Controller
 {
@@ -53,9 +54,9 @@ class HidedTweetController extends Controller
   {
     try
     {
-      $hidedTweet = new HidedTweeet;
+      $hidedTweet = new HidedTweet;
       $hidedTweet->id_user = $request->id_user;
-      $hidedTweet->id_tweet = $request->id_user;
+      $hidedTweet->id_tweet = $request->id_tweet;
       $hidedTweet->save();
       return APIResponseResult::OK($hidedTweet); 
     }

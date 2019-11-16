@@ -15,7 +15,7 @@ class EntriesTable extends Migration
   {
     Schema::create('entries', function (Blueprint $table) {
       $table->bigIncrements('id');
-      $table->bigInteger('id_user');
+      $table->bigInteger('users_id');
       $table->date('creation_date');
       $table->string('title', 80);
       $table->string('content', 10000);

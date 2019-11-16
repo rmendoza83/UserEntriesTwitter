@@ -20,7 +20,7 @@ try {
  */
 
  // Using axios with observables
-window.axios = require('axios-observable');
+window.axios = require('axios-observable').Axios;
 //window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**

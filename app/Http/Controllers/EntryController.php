@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entry;
+use App\User;
 use Classes\APIResponseResult;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,12 +20,33 @@ class EntryController extends Controller
   {
     try
     {
-      $entries = Entry::all();
-      return APIResponseResult::OK($entries);
+      $userentries = User::with('entries')
+        ->get();
+      $filteredUserEntries = [];
+      //return APIResponseResult::OK($filteredUserEntries);
+      foreach ($userentries as $user)
+      {
+        $filteredUserEntries = array_merge($filteredUserEntries,array_slice($user->entries->toArray(),0, 3));
+      }
+      usort($filteredUserEntries, function($a, $b) {
+        if (Carbon::parse($a["creation_date"])->greaterThan(Carbon::parse($b["creation_date"])))
+        {
+          return -1;
+        } 
+        else if (Carbon::parse($a["creation_date"])->lessThan(Carbon::parse($b["creation_date"])))
+        {
+          return 1;
+        }
+        else
+        {
+          return 0;
+        }
+      });
+      return APIResponseResult::OK($filteredUserEntries);
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
   /**
@@ -45,7 +67,7 @@ class EntryController extends Controller
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
   /**
@@ -57,13 +79,13 @@ class EntryController extends Controller
   {
     try
     {
-      $entries = Entry::where("id_user", $id)
+      $entries = Entry::where("users_id", $id)
         ->orderBy("id", "desc");
       return APIResponseResult::OK($entries);
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
   /**
@@ -77,7 +99,7 @@ class EntryController extends Controller
     {
       $mytime = Carbon::now();
       $entry = new Entry;
-      $entry->id_user = $request->id_user;
+      $entry->users_id = $request->users_id;
       $entry->creation_date = $mytime->toDateTimeString();
       $entry->title = $request->title;
       $entry->content = $request->content;
@@ -86,7 +108,7 @@ class EntryController extends Controller
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
   /**
@@ -103,7 +125,7 @@ class EntryController extends Controller
       {
         return APIResponseResult::ERROR("The Entry $id doesn't exists on the database");
       }
-      $entry->id_user = $request->id_user;
+      $entry->users_id = $request->users_id;
       $entry->title = $request->title;
       $entry->content = $request->content;
       $entry->save();
@@ -111,7 +133,7 @@ class EntryController extends Controller
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
   /**
@@ -133,7 +155,7 @@ class EntryController extends Controller
     }
     catch (Exception $e)
     {
-      return APIResponseResult::ERROR("Some error ocurred. Details: ", $e->getMessage());
+      return APIResponseResult::ERROR("Some error ocurred. Details: " . $e->getMessage());
     }
   }
 }

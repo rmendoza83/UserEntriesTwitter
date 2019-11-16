@@ -30,7 +30,9 @@ able to see a single user's entries and tweets (from Twitter).
 
 ## Application Info
 **Framework:** Laravel 6 + VueJs
+
 **Operation System:** Debian 9 | Apache 2.4.25 | PHP 7.3.11 | MariaDB (MySQL) 10.1.41
+
 **Dependencies:** Laravel 6 Dependencies, cURL PHP extension, NodeJS
 
 ## General Deployment Instructions

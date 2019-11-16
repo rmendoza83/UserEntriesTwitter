@@ -58,9 +58,9 @@ able to see a single user's entries and tweets (from Twitter).
         $ cp .env.example .env
     ```
 
-5. Fill the following configuration in your .env file:
+5. Fill the following configuration in your **.env** file:
 
-    Configure your MariaDB Connection
+* Configure your MariaDB Connection
     ```sh
         DB_CONNECTION=mysql
         DB_HOST=localhost
@@ -69,7 +69,7 @@ able to see a single user's entries and tweets (from Twitter).
         DB_USERNAME={MARIADB_USERNAME}
         DB_PASSWORD={MARIADB_PASSWORD}
     ```
-    Configure your Twitter App keys
+* Configure your Twitter App keys
     ```sh
         TWITTER_CONSUMER_KEY=
         TWITTER_CONSUMER_SECRET=
@@ -113,7 +113,7 @@ In this case we need to create a new Virtual Host on Apache Environment, the ste
         $ cd /etc/apache2/sites-available
         $ touch reinaldo-mendoza.jobsitychallenge.com.conf
     ```
-    Add the following code in the new file reinaldo-mendoza.jobsitychallenge.com.conf created in the previous step:
+    Add the following code in the new file **reinaldo-mendoza.jobsitychallenge.com.conf** created in the previous step:
     ```xml
         <VirtualHost *:80>
             # The ServerName directive sets the request scheme, hostname and port that

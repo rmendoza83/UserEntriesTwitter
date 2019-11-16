@@ -7,7 +7,7 @@
       <div class="container">
         <div
           class="row mb-2"
-          v-for="entry in entries"
+          v-for="entry in visibleEntries"
           :key="entry.id"
           >
           <div class="col-md-12">
@@ -25,6 +25,13 @@
             </div>
           </div>
         </div>
+        <button
+          class="btn btn-info float-right"
+          v-if="entries.length > visibleEntries.length"
+          v-on:click="onShowMore()"
+          >
+          Show More
+        </button>
       </div>
     </div>
   </div>
@@ -38,7 +45,9 @@ export default {
   ],
   data() {
     return {
-      entries: []
+      entries: [],
+      visibleEntries: [],
+      visibleCount: 5,
     }
   },
   mounted() {
@@ -46,15 +55,25 @@ export default {
       .subscribe(response => {
         if (response.data.statusCode == 200) {
           this.entries = response.data.data;
+          this.getVisibleEntries();
         }
       });
   },
   methods: {
-    viewProfile(users_id) {
-      console.log(this);
-      this.$router.push({
-        path: '/view-profile/' + users_id
-      });
+    getVisibleEntries() {
+      let count = 0;
+      this.visibleEntries = [];
+      for (let entry of this.entries) {
+        this.visibleEntries.push(entry);
+        count++;
+        if (count == this.visibleCount) {
+          break;
+        }
+      }
+    },
+    onShowMore() {
+      this.visibleCount += 5;
+      this.getVisibleEntries();
     }
   }
 };

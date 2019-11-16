@@ -19,7 +19,7 @@
           </tweet-component>
           <button
             class="btn btn-info float-right"
-            v-if="tweets.length != visibleTweets.length"
+            v-if="tweets.length > visibleTweets.length"
             v-on:click="onShowMore()"
             >
             Show More
